@@ -1,3 +1,5 @@
+// nahla-naturals\pages\product\[slug].js
+
 import React, { useState } from "react";
 import {
   AiOutlineMinus,

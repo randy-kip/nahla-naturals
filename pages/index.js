@@ -1,3 +1,5 @@
+// nahla-naturals\pages\index.js
+
 import React from 'react';
 
 import { client } from '../lib/client';
