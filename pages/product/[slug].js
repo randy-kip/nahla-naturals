@@ -22,7 +22,7 @@ const ProductDetails = ({ product, products }) => {
     marginBottom: '10px',
     cursor: 'pointer',
     backgroundColor: 'red',
-    color: '#fff',
+    color: 'black',
   }
 
   if (!product) {
