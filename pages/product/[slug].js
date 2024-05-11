@@ -13,6 +13,22 @@ import { Product } from "../../components";
 import { useStateContext } from "../../context/StateContext";
 
 const ProductDetails = ({ product, products }) => {
+  const noProduct = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    fontAize: '2em',
+    marginBottom: '10px',
+    cursor: 'pointer',
+    backgroundColor: 'red',
+    color: '#fff',
+  }
+
+  if (!product) {
+    return <div style={noProduct}><h1>The product isn't here</h1></div>;
+  }
+
   const { image, name, details, price } = product;
   const [index, setIndex] = useState(0);
   const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
@@ -125,14 +141,12 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async ({ params: { slug } }) => {
+export const getStaticProps = async ({ params: { slug }, params }) => {
   const query = `*[_type == "product" && slug.current == '${slug}'][0]`;
   const productsQuery = '*[_type == "product"]';
 
-  const product = await client.fetch(query);
+  const product = params.product || (await client.fetch(query)); // Use params.product if available
   const products = await client.fetch(productsQuery);
-
-  console.log(product);
 
   return {
     props: { products, product },
