@@ -212,56 +212,81 @@ text-align: end;
   font-size: 16px;
   font-weight: 200;
 }
-.footer-banner-container{
-  padding: 100px 40px;
+.footer-banner-container {
+  padding: 50px;
   background-color: #f02d34;
   border-radius: 15px;
   position: relative;
-  height: 400px;
-  line-height: 1; 
+  height: 250px;
+  line-height: 1.2;
   color: white;
   width: 100%;
   margin-top: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.banner-desc{
-  display: flex ;
+
+.banner-desc {
+  display: flex;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
 }
-.banner-desc button{
-  border-radius: 15px;
+
+.banner-desc .left {
+  display: flex;
+  flex-direction: column;
+}
+
+.banner-desc .left p,
+.banner-desc .right p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+.banner-desc .left h3 {
+  font-weight: 900;
+  font-size: 45px;
+  margin: 0;
+}
+
+.banner-desc .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.banner-desc .right h3 {
+  font-weight: 800;
+  font-size: 35px;
+  margin: 5px 0;
+}
+
+.banner-desc button {
+  border-radius: 5px;
   padding: 10px 16px;
   background-color: white;
   color: red;
   border: none;
-  margin-top: 40px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  margin-top: 10px;
 }
-.banner-desc .left h3{
-  font-weight: 900;
-  font-size: 80px;
-  margin-left: 25px;
-}
-.banner-desc .left p{
-  margin:18px;
-}
-.footer-banner-image{
+
+.footer-banner-image {
   position: absolute;
-  /* top: -35%;
-  left: 8%; */
-  top: -25%;
-  left: 25%;
+  height: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
-.banner-desc .right{
-  line-height: 1.4;
-}
-.banner-desc .right h3{
-  font-weight: 800;
-  font-size: 60px;
-}
-.banner-desc .right p{
-  font-size: 18px;
+
+.banner-desc .left,
+.banner-desc .right {
+  z-index: 2;
 }
 .banner-desc .right .company-desc{
   font-size: 14px;
@@ -630,26 +655,24 @@ margin-top: 160px;
     top: -2%;
     right: -6%;
   }
-  .footer-banner-container{
-    height: 560px;
-    margin-top: 80px;
+  .footer-banner-container {
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
   }
   .footer-banner-image{
-    width: 77%;
-    left: 30%;
-    top: 6%;
-    height: 56%
-  }
-  .banner-desc .left h3{
-    font-weight: 900;
-    font-size: 50px;
-    margin-left: 5px;
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    transform: none;
   }
   .banner-desc .left p{
     margin:18px;
   }
-  .banner-desc .right h3{
-    font-size: 45px;
+  .banner-desc .left h3,
+  .banner-desc .right h3 {
+    font-size: 25px;
   }
   .banner-desc .right p{
     font-size: 18px;
@@ -657,9 +680,12 @@ margin-top: 160px;
   .banner-desc .right .company-desc{
     font-size: 14px;
   }
-  .banner-desc{
-    flex-wrap: wrap;
-    gap: 20px;
+  .banner-desc {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .banner-desc button {
+    font-size: 14px;
   }
   .hero-banner-container{
     line-height: 1.3;
