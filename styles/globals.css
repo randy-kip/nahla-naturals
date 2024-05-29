@@ -635,6 +635,83 @@ span.text-red {
   margin-top: 10px;
 }
 
+/* Assuming you have a main CSS file, e.g., styles.css */
+.checkout-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background for better contrast */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow for a 3D effect */
+}
+
+.checkout-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: #ffffff; /* White background for items */
+  padding: 10px; /* Space around items */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Light shadow for a 3D effect */
+}
+
+.checkout-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px; /* Rounded corners */
+}
+
+.checkout-item h4 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.checkout-item p {
+  margin: 5px 0;
+}
+
+.phone-number-input {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-number-input label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.phone-number-input input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.checkout-btn {
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  margin-top: 20px; /* Space above the button */
+}
+
+.checkout-btn:hover {
+  background-color: #cc0000;
+}
+
+
 @media screen and (max-width: 800px) {
   .hero-banner-container {
     height: 560px;

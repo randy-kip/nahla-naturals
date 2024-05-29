@@ -1,83 +1,66 @@
-import React, { useState, useEffect } from 'react';
-// import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+// nahla-naturals\pages\[checkout].jsx
+import React, { useState } from 'react';
+import { useStateContext } from '../context/StateContext';
 
-const CheckoutPage = ({ items, total }) => {
-  const [show, setShow] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [orderId, setOrderId] = useState('');
+const Checkout = () => {
+  const { totalPrice, cartItems } = useStateContext();
+  const [phoneNumber, setPhoneNumber] = useState('');
 
-//   const clientID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+  const handleCheckout = async () => {
+    if (!phoneNumber) {
+      alert('Please enter your phone number.');
+      return;
+    }
 
-  // Logic for creating a PayPal order
-  const createOrder = async (data, actions) => {
-    try {
-      const request = new paypal.orders.OrdersCreateRequest();
-      request.requestBody({
-        intent: 'CAPTURE',
-        purchase_units: [
-          {
-            description: 'Your Order',
-            amount: {
-              currency_code: 'USD',
-              value: total,
-              breakdown: {
-                item_total: { currency_code: 'USD', value: total },
-              }
-            },
-            items: items.map((item) => ({
-              name: item.name,
-              description: item.description || '', 
-              unit_amount: { currency_code: 'USD', value: item.price },
-              quantity: item.quantity
-            }))
-          }
-        ]
-      });
+    // Replace with your actual checkout logic, such as sending a request to your backend
+    const response = await fetch('http://localhost:3000/stkpush', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNumber: phoneNumber, // Use the phone number entered by the user
+        amount: totalPrice,
+      }),
+    });
 
-      const response = await actions.order.create(request);
-      setOrderId(response.result.id);
-      return response.result.id;
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Error creating order");
+    const data = await response.json();
+    if (data.success) {
+      history.push('/payment-success'); // Redirect to a success page
+    } else {
+      alert('Payment failed. Please try again.');
     }
   };
-
-  // Logic for capturing a PayPal order
-  const onApprove = async (data, actions) => {
-    try {
-      const order = await actions.order.capture();
-      setSuccess(true);
-      console.log('Order captured:', order);
-      // Redirect to success page or update order status
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Error capturing order");
-    }
-  };
-
-  useEffect(() => {
-    if (success) {
-      // Handle successful payment (e.g., redirect, update order status)
-      console.log('Payment Successful! Update your backend database to reflect this.');
-    }
-  }, [success]);
 
   return (
-    // <PayPalScriptProvider options={{ "client-id": clientID }}>
-    //   {/* ... Your styling/layout for the checkout page ... */}
-    //   <PayPalButtons
-    //      createOrder={createOrder}
-    //      onApprove={onApprove}
-    //   />
-    //   {/* ... Handle error messages or success messages ... */}
-    // </PayPalScriptProvider>
-    
-    <>
-        <h3>CheckOut</h3>
-    </>
+    <div className="checkout-container">
+      <h2>Your Cart</h2>
+      <div className="checkout-details">
+        {cartItems.map((item) => (
+          <div key={item._id} className="checkout-item">
+            <img src={item.image} alt={item.name} />
+            <div>
+              <h4>{item.name}</h4>
+              <p>Quantity: {item.quantity}</p>
+              <p>Price: Ksh {item.price}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <h3>Total: Ksh {totalPrice}</h3>
+      <div className="phone-number-input">
+        <label htmlFor="phoneNumber">Enter your phone number to complete the payment:</label>
+        <input
+          type="text"
+          id="phoneNumber"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          placeholder="e.g. 0712345678"
+        />
+      </div>
+      <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
+    </div>
   );
 };
 
-export default CheckoutPage;
+export default Checkout;
