@@ -2,9 +2,26 @@
 import React, { useState } from 'react';
 import { useStateContext } from '../context/StateContext';
 
+import API_ENDPOINTS from '@/config/api';
+
 const Checkout = () => {
   const { totalPrice, cartItems } = useStateContext();
   const [phoneNumber, setPhoneNumber] = useState('');
+
+  const reformatPhoneNumber = (number) => {
+    // Remove any non-digit characters
+    let formattedNumber = number.replace(/\D/g, '');
+
+    if (formattedNumber.startsWith('0')) {
+      // Replace the starting 0 with 254
+      formattedNumber = '254' + formattedNumber.substring(1);
+    } else if (formattedNumber.startsWith('+254')) {
+      // Remove the leading +
+      formattedNumber = formattedNumber.substring(1);
+    }
+
+    return formattedNumber;
+  };
 
   const handleCheckout = async () => {
     if (!phoneNumber) {
@@ -12,14 +29,22 @@ const Checkout = () => {
       return;
     }
 
-    // Replace with your actual checkout logic, such as sending a request to your backend
-    const response = await fetch('http://localhost:3000/stkpush', {
+    const formattedPhoneNumber = reformatPhoneNumber(phoneNumber);
+
+    // Validate the reformatted phone number
+    if (formattedPhoneNumber.length !== 12) {
+      alert('Please enter a valid phone number.');
+      return;
+    }
+
+    // checkout logic, posting to stkpush
+    const response = await fetch(API_ENDPOINTS.push, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        phoneNumber: phoneNumber, // Use the phone number entered by the user
+        phoneNumber: formattedPhoneNumber, // Use the formatted phone number
         amount: totalPrice,
       }),
     });
@@ -42,12 +67,12 @@ const Checkout = () => {
             <div>
               <h4>{item.name}</h4>
               <p>Quantity: {item.quantity}</p>
-              <p>Price: Ksh {item.price}</p>
+              <p>Price: Ksh. {item.price}</p>
             </div>
           </div>
         ))}
       </div>
-      <h3>Total: Ksh {totalPrice}</h3>
+      <h3>Total: Ksh. {totalPrice}</h3>
       <div className="phone-number-input">
         <label htmlFor="phoneNumber">Enter your phone number to complete the payment:</label>
         <input
@@ -55,10 +80,10 @@ const Checkout = () => {
           id="phoneNumber"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="e.g. 0712345678"
+          placeholder="e.g. 254712345678"
         />
       </div>
-      <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
+      <button className="checkout-btn" onClick={handleCheckout}>Pay 🫰🏿</button>
     </div>
   );
 };
