@@ -1,21 +1,22 @@
 // nahla-naturals\pages\[checkout].jsx
-import React, { useState } from 'react';
-import { useStateContext } from '../context/StateContext';
+import React, { useState } from "react";
+import { useStateContext } from "../context/StateContext";
 
-import API_ENDPOINTS from '@/config/api';
+import API_ENDPOINTS from "@/config/api";
+import { urlFor } from "@/lib/client";
 
 const Checkout = () => {
   const { totalPrice, cartItems } = useStateContext();
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const reformatPhoneNumber = (number) => {
     // Remove any non-digit characters
-    let formattedNumber = number.replace(/\D/g, '');
+    let formattedNumber = number.replace(/\D/g, "");
 
-    if (formattedNumber.startsWith('0')) {
+    if (formattedNumber.startsWith("0")) {
       // Replace the starting 0 with 254
-      formattedNumber = '254' + formattedNumber.substring(1);
-    } else if (formattedNumber.startsWith('+254')) {
+      formattedNumber = "254" + formattedNumber.substring(1);
+    } else if (formattedNumber.startsWith("+254")) {
       // Remove the leading +
       formattedNumber = formattedNumber.substring(1);
     }
@@ -25,7 +26,7 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     if (!phoneNumber) {
-      alert('Please enter your phone number.');
+      alert("Please enter your phone number.");
       return;
     }
 
@@ -33,15 +34,15 @@ const Checkout = () => {
 
     // Validate the reformatted phone number
     if (formattedPhoneNumber.length !== 12) {
-      alert('Please enter a valid phone number.');
+      alert("Please enter a valid phone number.");
       return;
     }
 
     // checkout logic, posting to stkpush
     const response = await fetch(API_ENDPOINTS.push, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         phoneNumber: formattedPhoneNumber, // Use the formatted phone number
@@ -51,9 +52,9 @@ const Checkout = () => {
 
     const data = await response.json();
     if (data.success) {
-      history.push('/payment-success'); // Redirect to a success page
+      history.push("/payment-success"); // Redirect to a success page
     } else {
-      alert('Payment failed. Please try again.');
+      alert("Payment failed. Please try again.");
     }
   };
 
@@ -63,7 +64,7 @@ const Checkout = () => {
       <div className="checkout-details">
         {cartItems.map((item) => (
           <div key={item._id} className="checkout-item">
-            <img src={item.image} alt={item.name} />
+            <img src={urlFor(item?.image[0])} alt={item.name} />
             <div>
               <h4>{item.name}</h4>
               <p>Quantity: {item.quantity}</p>
@@ -74,7 +75,9 @@ const Checkout = () => {
       </div>
       <h3>Total: Ksh. {totalPrice}</h3>
       <div className="phone-number-input">
-        <label htmlFor="phoneNumber">Enter your phone number to complete the payment:</label>
+        <label htmlFor="phoneNumber">
+          Enter your phone number to complete the payment:
+        </label>
         <input
           type="text"
           id="phoneNumber"
@@ -83,7 +86,9 @@ const Checkout = () => {
           placeholder="e.g. 254712345678"
         />
       </div>
-      <button className="checkout-btn" onClick={handleCheckout}>Pay 🫰🏿</button>
+      <button className="checkout-btn" onClick={handleCheckout}>
+        Pay 🫰🏿
+      </button>
     </div>
   );
 };
