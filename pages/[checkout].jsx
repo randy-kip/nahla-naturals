@@ -52,7 +52,7 @@ const Checkout = () => {
 
     const data = await response.json();
     if (data.success) {
-      history.push("/payment-success"); // Redirect to a success page
+      history.push("/success"); // Redirect to a success page
     } else {
       alert("Payment failed. Please try again.");
     }
