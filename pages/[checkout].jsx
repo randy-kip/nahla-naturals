@@ -38,23 +38,53 @@ const Checkout = () => {
       return;
     }
 
-    // checkout logic, posting to stkpush
-    const response = await fetch(API_ENDPOINTS.push, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        phoneNumber: formattedPhoneNumber, // Use the formatted phone number
-        amount: totalPrice,
-      }),
-    });
+    // Checkout logic, posting to stkpush
+    try {
+      const response = await fetch(API_ENDPOINTS.push, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phoneNumber: formattedPhoneNumber, // Use the formatted phone number
+          amount: totalPrice,
+        }),
+      });
 
-    const data = await response.json();
-    if (data.success) {
-      history.push("/success"); // Redirect to a success page
-    } else {
-      alert("Payment failed. Please try again.");
+      const data = await response.json();
+
+      if (data[0] === "success") {
+        const checkoutRequestID = data[1].CheckoutRequestID;
+
+        // Polling payment status
+        const pollingResponse = await fetch(API_ENDPOINTS.polling, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            checkoutRequestID: checkoutRequestID,
+          }),
+        });
+
+        const pollingData = await pollingResponse.json();
+
+        if (pollingData[0] === "success" && pollingData[1].ResultDesc === "The service request is processed successfully.") {
+          // Redirect to success page
+          window.location.href = "/success";
+        } else {
+          // Handle other ResultDesc cases
+          console.log("Payment status:", pollingData[1].ResultDesc);
+          alert("Payment status: " + pollingData[1].ResultDesc);
+        }
+      } else {
+        // Handle initial request failure
+        console.error("STK push request failed:", data);
+        alert("Payment failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during payment process:", error);
+      alert("Error during payment process. Please try again.");
     }
   };
 
