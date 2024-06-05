@@ -8,6 +8,7 @@ import { urlFor } from "@/lib/client";
 const Checkout = () => {
   const { totalPrice, cartItems } = useStateContext();
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [checkoutRequestID, setCheckoutRequestID] = useState("");
 
   const reformatPhoneNumber = (number) => {
     // Remove any non-digit characters
@@ -55,28 +56,13 @@ const Checkout = () => {
 
       if (data[0] === "success") {
         const checkoutRequestID = data[1].CheckoutRequestID;
+        setCheckoutRequestID(checkoutRequestID);
 
-        // Polling payment status
-        const pollingResponse = await fetch(API_ENDPOINTS.polling, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            checkoutRequestID: checkoutRequestID,
-          }),
-        });
+        // Wait for 1 minute before polling payment status
+        setTimeout(async () => {
+          await pollPaymentStatus(checkoutRequestID);
+        }, 75000); // 1 minute, 15 seconds = 75000 milliseconds
 
-        const pollingData = await pollingResponse.json();
-
-        if (pollingData[0] === "success" && pollingData[1].ResultDesc === "The service request is processed successfully.") {
-          // Redirect to success page
-          window.location.href = "/success";
-        } else {
-          // Handle other ResultDesc cases
-          console.log("Payment status:", pollingData[1].ResultDesc);
-          alert("Payment status: " + pollingData[1].ResultDesc);
-        }
       } else {
         // Handle initial request failure
         console.error("STK push request failed:", data);
@@ -85,6 +71,42 @@ const Checkout = () => {
     } catch (error) {
       console.error("Error during payment process:", error);
       alert("Error during payment process. Please try again.");
+    }
+  };
+
+  const pollPaymentStatus = async (checkoutRequestID) => {
+    try {
+      const pollingResponse = await fetch(API_ENDPOINTS.polling, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          checkoutRequestID: checkoutRequestID,
+        }),
+      });
+
+      const pollingData = await pollingResponse.json();
+
+      if (pollingData[0] === "success" && pollingData[1].ResultDesc === "The service request is processed successfully.") {
+        // Redirect to success page
+        window.location.href = "/success";
+      } else {
+        // Handle other ResultDesc cases
+        console.log("Payment status:", pollingData[1].ResultDesc);
+        alert("Payment status: " + pollingData[1].ResultDesc);
+      }
+    } catch (error) {
+      console.error("Error during polling process:", error);
+      alert("Error during polling process. Please try again.");
+    }
+  };
+
+  const handleManualCheck = async () => {
+    if (checkoutRequestID) {
+      await pollPaymentStatus(checkoutRequestID);
+    } else {
+      alert("No payment in process to check.");
     }
   };
 
@@ -118,6 +140,9 @@ const Checkout = () => {
       </div>
       <button className="checkout-btn" onClick={handleCheckout}>
         Pay 🫰🏿
+      </button>
+      <button className="manual-check-btn" onClick={handleManualCheck}>
+        Verify Payment
       </button>
     </div>
   );
