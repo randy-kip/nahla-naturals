@@ -9,6 +9,7 @@ const Checkout = () => {
   const { totalPrice, cartItems } = useStateContext();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [checkoutRequestID, setCheckoutRequestID] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const reformatPhoneNumber = (number) => {
     // Remove any non-digit characters
@@ -58,7 +59,10 @@ const Checkout = () => {
         const checkoutRequestID = data[1].CheckoutRequestID;
         setCheckoutRequestID(checkoutRequestID);
 
-        // Wait for 1 minute before polling payment status
+        // Show the modal
+        setShowModal(true);
+
+        // Wait for 1 minute 15 seconds before polling payment status
         setTimeout(async () => {
           await pollPaymentStatus(checkoutRequestID);
         }, 75000); // 1 minute, 15 seconds = 75000 milliseconds
@@ -144,6 +148,17 @@ const Checkout = () => {
       <button className="manual-check-btn" onClick={handleManualCheck}>
         Verify Payment
       </button>
+
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Processing Payment</h2>
+            <p>We are checking your payment and will verify it in a minute.</p>
+            <p>If nothing happens in over a minute's time, please hit the verify payment button.</p>
+            <button onClick={() => setShowModal(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
