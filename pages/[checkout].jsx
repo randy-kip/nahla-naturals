@@ -1,5 +1,6 @@
 // nahla-naturals\pages\[checkout].jsx
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 import { useStateContext } from "../context/StateContext";
 
 import API_ENDPOINTS from "@/config/api";
@@ -28,7 +29,7 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     if (!phoneNumber) {
-      alert("Please enter your phone number.");
+      toast.error("Please enter your phone number.");
       return;
     }
 
@@ -36,7 +37,7 @@ const Checkout = () => {
 
     // Validate the reformatted phone number
     if (formattedPhoneNumber.length !== 12) {
-      alert("Please enter a valid phone number.");
+      toast.error("Please enter a valid phone number.");
       return;
     }
 
@@ -66,15 +67,14 @@ const Checkout = () => {
         setTimeout(async () => {
           await pollPaymentStatus(checkoutRequestID);
         }, 75000); // 1 minute and 15 seconds = 75000 milliseconds
-
       } else {
         // Handle initial request failure
         console.error("STK push request failed:", data);
-        alert("Payment failed. Please try again.");
+        toast.error("Payment failed. Please try again.");
       }
     } catch (error) {
       console.error("Error during payment process:", error);
-      alert("Error during payment process. Please try again.");
+      toast.error("Error during payment process. Please try again.");
     }
   };
 
@@ -92,17 +92,22 @@ const Checkout = () => {
 
       const pollingData = await pollingResponse.json();
 
-      if (pollingData[0] === "success" && pollingData[1].ResultDesc === "The service request is processed successfully.") {
+      if (
+        pollingData[0] === "success" &&
+        pollingData[1].ResultDesc ===
+          "The service request is processed successfully."
+      ) {
         // Redirect to success page
+        toast.success("Payment Successful!")
         window.location.href = "/success";
       } else {
         // Handle other ResultDesc cases
         console.log("Payment status:", pollingData[1].ResultDesc);
-        alert("Payment status: " + pollingData[1].ResultDesc);
+        toast.error("Payment status: " + pollingData[1].ResultDesc);
       }
     } catch (error) {
       console.error("Error during polling process:", error);
-      alert("Error during polling process. Please try again.");
+      toast.error("Error during polling process. Please try again.");
     }
   };
 
@@ -111,13 +116,13 @@ const Checkout = () => {
     if (checkoutRequestID) {
       await pollPaymentStatus(checkoutRequestID);
     } else {
-      alert("No payment in process to check.");
+      toast.error("No payment in process to check.");
     }
   };
 
   const handleModalBackgroundClick = (e) => {
     // Close the modal if the user clicks outside the modal content
-    if (e.target.classList.contains('modal')) {
+    if (e.target.classList.contains("modal")) {
       setShowModal(false);
     }
   };
@@ -128,7 +133,11 @@ const Checkout = () => {
       <div className="checkout-details">
         {cartItems.map((item) => (
           <div key={item._id} className="checkout-item">
-            <img src={urlFor(item?.image[0])} alt={item.name} className="checkout-item-image" />
+            <img
+              src={urlFor(item?.image[0])}
+              alt={item.name}
+              className="checkout-item-image"
+            />
             <div>
               <h4>{item.name}</h4>
               <p>Quantity: {item.quantity}</p>
@@ -160,12 +169,23 @@ const Checkout = () => {
       </div>
 
       {showModal && (
-        <div className="modal"  onClick={handleModalBackgroundClick}>
+        <div className="modal" onClick={handleModalBackgroundClick}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Processing Payment</h2>
-            <p>We are checking your payment and we shall verify it in 1 minute and 15 seconds.</p>
-            <p>If nothing happens in over a minute's time, please hit the verify payment button.</p>
-            <button onClick={() => setShowModal(false)} className="close-modal-btn">Close</button>
+            <p>
+              We are checking your payment and we shall verify it in 1 minute
+              and 15 seconds.
+            </p>
+            <p>
+              If nothing happens in over a minute's time, please hit the verify
+              payment button.
+            </p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="close-modal-btn"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
