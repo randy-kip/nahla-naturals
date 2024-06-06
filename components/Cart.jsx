@@ -111,7 +111,7 @@ const Cart = () => {
             </div>
             <div className="btn-container">
               <Link href="/checkout">
-                <button type="button" className="btn">
+                <button type="button" className="btn" onClick={() => setShowCart(false)}>
                   Proceed to Checkout
                 </button>
               </Link>
