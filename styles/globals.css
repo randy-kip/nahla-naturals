@@ -635,14 +635,20 @@ span.text-red {
   margin-top: 10px;
 }
 
-/* Assuming you have a main CSS file, e.g., styles.css */
 .checkout-container {
   width: 80%;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9; /* Light background for better contrast */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow for a 3D effect */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #324d67;
+  margin-bottom: 20px;
 }
 
 .checkout-details {
@@ -655,26 +661,24 @@ span.text-red {
   display: flex;
   align-items: center;
   gap: 20px;
-  background-color: #ffffff; /* White background for items */
-  padding: 10px; /* Space around items */
-  border-radius: 5px; /* Rounded corners */
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Light shadow for a 3D effect */
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.checkout-item img {
+.checkout-item-image {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 5px; /* Rounded corners */
+  border-radius: 5px;
 }
 
-.checkout-item h4 {
-  margin: 0;
-  font-size: 1.2em;
-}
-
-.checkout-item p {
-  margin: 5px 0;
+.total-price {
+  text-align: right;
+  font-size: 1.5rem;
+  color: #f02d34;
+  margin: 20px 0;
 }
 
 .phone-number-input {
@@ -686,6 +690,7 @@ span.text-red {
 .phone-number-input label {
   margin-bottom: 5px;
   font-weight: bold;
+  color: #324d67;
 }
 
 .phone-number-input input {
@@ -695,22 +700,67 @@ span.text-red {
   border-radius: 5px;
 }
 
-.checkout-btn {
-  background-color: #ff0000;
-  color: white;
+.buttons-container {
+  width: 400px;
+  margin: auto;
+}
+
+.checkout-btn, .manual-check-btn, .close-modal-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 12px;
+  border-radius: 15px;
   border: none;
-  padding: 10px 20px;
-  font-size: 1em;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-top: 40px;
+  text-transform: uppercase;
+  background-color: #f02d34;
+  color: #fff;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-  margin-top: 20px; /* Space above the button */
+  transform: scale(1, 1);
+  transition: transform 0.5s ease;
 }
-
-.checkout-btn:hover {
+.checkout-btn:hover, .manual-check-btn:hover, .close-modal-btn:hover {
   background-color: #cc0000;
+  transform: scale(1.1, 1.1);
 }
 
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #324d67;
+}
+
+.modal-content p {
+  margin: 10px 0;
+}
+
+.close-modal-btn {
+  margin-top: 10px;
+}
 
 @media screen and (max-width: 800px) {
   .hero-banner-container {
@@ -852,5 +902,37 @@ span.text-red {
   .btn-container {
     width: 300px;
     margin: auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .checkout-title {
+    font-size: 1.5rem;
+  }
+
+  .checkout-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .checkout-item-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .total-price {
+    text-align: left;
+  }
+
+  .buttons-container {
+    width: 100%;
+  }
+
+  .checkout-btn, .manual-check-btn, .close-modal-btn {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 90%;
   }
 }

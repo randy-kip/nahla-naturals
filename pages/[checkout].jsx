@@ -62,10 +62,10 @@ const Checkout = () => {
         // Show the modal
         setShowModal(true);
 
-        // Wait for 1 minute 15 seconds before polling payment status
+        // Wait for 1 minute and 15 seconds before polling payment status
         setTimeout(async () => {
           await pollPaymentStatus(checkoutRequestID);
-        }, 75000); // 1 minute, 15 seconds = 75000 milliseconds
+        }, 75000); // 1 minute and 15 seconds = 75000 milliseconds
 
       } else {
         // Handle initial request failure
@@ -106,6 +106,7 @@ const Checkout = () => {
     }
   };
 
+  // manual payment verification to '/polling_payment
   const handleManualCheck = async () => {
     if (checkoutRequestID) {
       await pollPaymentStatus(checkoutRequestID);
@@ -114,13 +115,20 @@ const Checkout = () => {
     }
   };
 
+  const handleModalBackgroundClick = (e) => {
+    // Close the modal if the user clicks outside the modal content
+    if (e.target.classList.contains('modal')) {
+      setShowModal(false);
+    }
+  };
+
   return (
     <div className="checkout-container">
-      <h2>Your Cart</h2>
+      <h2 className="checkout-title">Your Cart</h2>
       <div className="checkout-details">
         {cartItems.map((item) => (
           <div key={item._id} className="checkout-item">
-            <img src={urlFor(item?.image[0])} alt={item.name} />
+            <img src={urlFor(item?.image[0])} alt={item.name} className="checkout-item-image" />
             <div>
               <h4>{item.name}</h4>
               <p>Quantity: {item.quantity}</p>
@@ -129,7 +137,7 @@ const Checkout = () => {
           </div>
         ))}
       </div>
-      <h3>Total: Ksh. {totalPrice}</h3>
+      <h3 className="total-price">Total: Ksh. {totalPrice}</h3>
       <div className="phone-number-input">
         <label htmlFor="phoneNumber">
           Enter your phone number to complete the payment:
@@ -142,20 +150,22 @@ const Checkout = () => {
           placeholder="e.g. 254712345678"
         />
       </div>
-      <button className="checkout-btn" onClick={handleCheckout}>
-        Pay 🫰🏿
-      </button>
-      <button className="manual-check-btn" onClick={handleManualCheck}>
-        Verify Payment
-      </button>
+      <div className="buttons-container">
+        <button className="checkout-btn" onClick={handleCheckout}>
+          Pay 🫰🏿
+        </button>
+        <button className="manual-check-btn" onClick={handleManualCheck}>
+          Verify Payment
+        </button>
+      </div>
 
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="modal"  onClick={handleModalBackgroundClick}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Processing Payment</h2>
-            <p>We are checking your payment and will verify it in a minute.</p>
+            <p>We are checking your payment and we shall verify it in 1 minute and 15 seconds.</p>
             <p>If nothing happens in over a minute's time, please hit the verify payment button.</p>
-            <button onClick={() => setShowModal(false)}>Close</button>
+            <button onClick={() => setShowModal(false)} className="close-modal-btn">Close</button>
           </div>
         </div>
       )}
