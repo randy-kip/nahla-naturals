@@ -1,8 +1,7 @@
 // nahla-naturals\pages\[checkout].jsx
 import React, { useState } from "react";
-import { toast } from "react-hot-toast";
 import { useStateContext } from "../context/StateContext";
-
+import toast, { Toaster } from 'react-hot-toast';
 import API_ENDPOINTS from "@/config/api";
 import { urlFor } from "@/lib/client";
 
@@ -41,103 +40,97 @@ const Checkout = () => {
       return;
     }
 
-    // Checkout logic, posting to stkpush
-    try {
-      const response = await fetch(API_ENDPOINTS.push, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phoneNumber: formattedPhoneNumber, // Use the formatted phone number
-          amount: totalPrice,
-        }),
-      });
+    const paymentPromise = new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch(API_ENDPOINTS.push, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phoneNumber: formattedPhoneNumber,
+            amount: totalPrice,
+          }),
+        });
 
-      const data = await response.json();
-
-      if (data[0] === "success") {
-        const checkoutRequestID = data[1].CheckoutRequestID;
-        setCheckoutRequestID(checkoutRequestID);
-
-        // Show the modal
-        setShowModal(true);
-
-        // Wait for 1 minute and 15 seconds before polling payment status
-        setTimeout(async () => {
-          await pollPaymentStatus(checkoutRequestID);
-        }, 75000); // 1 minute and 15 seconds = 75000 milliseconds
-      } else {
-        // Handle initial request failure
-        console.error("STK push request failed:", data);
-        toast.error("Payment failed. Please try again.");
+        const data = await response.json();
+        if (data[0] === "success") {
+          const checkoutRequestID = data[1].CheckoutRequestID;
+          setCheckoutRequestID(checkoutRequestID);
+          setShowModal(true);
+          setTimeout(async () => {
+            try {
+              await pollPaymentStatus(checkoutRequestID);
+              resolve();
+            } catch (error) {
+              reject(error);
+            }
+          }, 75000);
+        } else {
+          reject(new Error("STK push request failed"));
+        }
+      } catch (error) {
+        reject(error);
       }
-    } catch (error) {
-      console.error("Error during payment process:", error);
-      toast.error("Error during payment process. Please try again.");
-    }
+    });
+
+    toast.promise(
+      paymentPromise,
+      {
+        loading: 'Awaiting Payment...',
+        success: <b>Payment Successful!</b>,
+        error: (err) => <b>{err.message}</b>,
+      }
+    );
   };
 
   const pollPaymentStatus = async (checkoutRequestID) => {
-    try {
-      const pollingResponse = await fetch(API_ENDPOINTS.polling, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          checkoutRequestID: checkoutRequestID,
-        }),
-      });
+    const pollingResponse = await fetch(API_ENDPOINTS.polling, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        checkoutRequestID: checkoutRequestID,
+      }),
+    });
 
-      const pollingData = await pollingResponse.json();
-
-      if (
-        pollingData[0] === "success" &&
-        pollingData[1].ResultDesc ===
-          "The service request is processed successfully."
-      ) {
-        // Redirect to success page
-        toast.success("Payment Successful!")
-        window.location.href = "/success";
-      } else {
-        // Handle other ResultDesc cases
-        console.log("Payment status:", pollingData[1].ResultDesc);
-        toast.error("Payment status: " + pollingData[1].ResultDesc);
-      }
-    } catch (error) {
-      console.error("Error during polling process:", error);
-      toast.error("Error during polling process. Please try again.");
+    const pollingData = await pollingResponse.json();
+    if (pollingData[0] === "success" && pollingData[1].ResultDesc === "The service request is processed successfully.") {
+      window.location.href = "/success";
+    } else {
+      throw new Error(pollingData[1].ResultDesc);
     }
   };
 
   // manual payment verification to '/polling_payment
   const handleManualCheck = async () => {
     if (checkoutRequestID) {
-      await pollPaymentStatus(checkoutRequestID);
+      try {
+        await pollPaymentStatus(checkoutRequestID);
+        toast.success("Payment verified successfully!");
+      } catch (error) {
+        toast.error("Error during payment verification. Please try again.");
+      }
     } else {
       toast.error("No payment in process to check.");
     }
   };
 
   const handleModalBackgroundClick = (e) => {
-    // Close the modal if the user clicks outside the modal content
-    if (e.target.classList.contains("modal")) {
+    if (e.target.classList.contains('modal')) {
       setShowModal(false);
     }
   };
 
   return (
     <div className="checkout-container">
+      <Toaster />
       <h2 className="checkout-title">Your Cart</h2>
       <div className="checkout-details">
         {cartItems.map((item) => (
           <div key={item._id} className="checkout-item">
-            <img
-              src={urlFor(item?.image[0])}
-              alt={item.name}
-              className="checkout-item-image"
-            />
+            <img src={urlFor(item?.image[0])} alt={item.name} className="checkout-item-image" />
             <div>
               <h4>{item.name}</h4>
               <p>Quantity: {item.quantity}</p>
@@ -172,20 +165,10 @@ const Checkout = () => {
         <div className="modal" onClick={handleModalBackgroundClick}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Processing Payment</h2>
-            <p>
-              We are checking your payment and we shall verify it in 1 minute
-              and 15 seconds.
-            </p>
-            <p>
-              If nothing happens in over a minute's time, please hit the verify
-              payment button.
-            </p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="close-modal-btn"
-            >
-              Close
-            </button>
+            <p>We are checking your payment and we shall verify it in 1 minute
+            and 15 seconds.</p>
+            <p>If nothing happens in over a minute's time, please hit the verify payment button.</p>
+            <button onClick={() => setShowModal(false)} className="close-modal-btn">Close</button>
           </div>
         </div>
       )}

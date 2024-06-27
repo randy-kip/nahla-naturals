@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import Cookies from 'js-cookie';
 
 const Context = createContext();
 
@@ -14,6 +15,24 @@ export const StateContext = ({ children }) => {
 
   let foundProduct;
   let index;
+
+  useEffect(() => {
+    // Load cart items from cookies on initial load
+    const savedCartItems = Cookies.get('cartItems');
+    const savedTotalPrice = Cookies.get('totalPrice');
+    const savedTotalQuantities = Cookies.get('totalQuantities');
+
+    if (savedCartItems) setCartItems(JSON.parse(savedCartItems));
+    if (savedTotalPrice) setTotalPrice(JSON.parse(savedTotalPrice));
+    if (savedTotalQuantities) setTotalQuantities(JSON.parse(savedTotalQuantities));
+  }, []);
+
+  useEffect(() => {
+    // Save cart items to cookies whenever they change
+    Cookies.set('cartItems', JSON.stringify(cartItems));
+    Cookies.set('totalPrice', JSON.stringify(totalPrice));
+    Cookies.set('totalQuantities', JSON.stringify(totalQuantities));
+  }, [cartItems, totalPrice, totalQuantities]);
 
   const onAdd = (product, quantity) => {
     const checkProductInCart = cartItems.find(
@@ -58,7 +77,7 @@ export const StateContext = ({ children }) => {
     setCartItems(newCartItems);
   };
 
-  const toggleCartItemQuanitity = (id, value) => {
+  const toggleCartItemQuantity = (id, value) => {
     foundProduct = cartItems.find((item) => item._id === id);
     index = cartItems.findIndex((product) => product._id === id);
     const newCartItems = cartItems.filter((item) => item._id !== id);
@@ -106,7 +125,7 @@ export const StateContext = ({ children }) => {
         incQty,
         decQty,
         onAdd,
-        toggleCartItemQuanitity,
+        toggleCartItemQuantity,
         onRemove,
         setCartItems,
         setTotalPrice,

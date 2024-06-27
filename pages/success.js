@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { BsBagCheckFill } from "react-icons/bs";
+import Cookies from 'js-cookie';
 
 import { useStateContext } from "@/context/StateContext";
 import { runFireworks } from "@/lib/utils";
@@ -9,10 +10,20 @@ const Success = () => {
   const { setCartItems, setTotalPrice, setTotalQuantities } = useStateContext();
 
   useEffect(() => {
+    // Clear local storage
     localStorage.clear();
+
+    // Clear cart context state
     setCartItems([]);
     setTotalPrice(0);
     setTotalQuantities(0);
+
+    // Clear cookies
+    Cookies.remove('cartItems');
+    Cookies.remove('totalPrice');
+    Cookies.remove('totalQuantities');
+
+    // Run fireworks animation
     runFireworks();
   }, []);
 
