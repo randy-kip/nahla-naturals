@@ -25,7 +25,7 @@ const Success = () => {
 
     // Run fireworks animation
     runFireworks();
-  }, []);
+  }, [setCartItems, setTotalPrice, setTotalQuantities]);
 
   return (
     <div className="success-wrapper">

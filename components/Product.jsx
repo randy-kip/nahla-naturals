@@ -4,15 +4,18 @@ import Link from "next/link";
 import { urlFor } from "../lib/client";
 
 const Product = ({ product: { image, name, slug, price } }) => {
+  const imageUrl = image && image[0] ? urlFor(image[0]).url() : '/images/default-image.png'; // Use a default image if image[0] is not available
+
   return (
     <div>
       <Link href={`/product/${slug.current}`}>
         <div className="product-card">
           <img
-            src={urlFor(image && image[0])}
+            src={imageUrl}
             width={250}
             height={250}
             className="product-image"
+            alt="product image"
           />
           <p className="product-name">{name}</p>
           <p className="product-price">Ksh.{price}</p>
