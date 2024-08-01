@@ -16,7 +16,6 @@ Nahla Naturals is an e-commerce website designed to showcase and sell natural pr
 - **Shopping Cart**: Users can add products to their cart and proceed to checkout.
 - **Responsive Design**: Optimized for both desktop and mobile devices.
 - **Payment Integration**: Integrates with MPESA for seamless payment processing.
-- **User Authentication**: Secure user authentication and account management.
 
 ## Technologies Used
 
@@ -96,7 +95,7 @@ Contributions are welcome! Please fork the repository and create a pull request 
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/randy-kip/nahla-naturals/blob/main/LICENSE.md) file for details.
 
 
 ---
