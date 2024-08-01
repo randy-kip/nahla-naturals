@@ -1,5 +1,5 @@
 // nahla-naturals\config\api.js
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://ror-mpesa-nahla-naturals.onrender.com';
 
 export const API_ENDPOINTS = {
   base: API_BASE_URL,
