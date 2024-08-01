@@ -1,41 +1,108 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Nahla Naturals
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Sanity](https://img.shields.io/badge/Sanity-000000?style=for-the-badge&logo=sanity&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-First, run the development server:
+## Overview
 
+Nahla Naturals is an e-commerce website designed to showcase and sell natural products. The website is built using Next.js and integrates with Sanity CMS for content management. It offers a user-friendly interface, responsive design, and seamless shopping experience.
+
+## Features
+
+- **Product Management**: Add, update, and manage products easily using Sanity CMS.
+- **Shopping Cart**: Users can add products to their cart and proceed to checkout.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
+- **Payment Integration**: Integrates with MPESA for seamless payment processing.
+- **User Authentication**: Secure user authentication and account management.
+
+## Technologies Used
+
+- ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+- ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+- ![Sanity](https://img.shields.io/badge/Sanity-000000?style=for-the-badge&logo=sanity&logoColor=white)
+- ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+- ![MPESA](https://img.shields.io/badge/MPESA-008000?style=for-the-badge&logo=mpesa&logoColor=white)
+
+## Installation
+
+### Prerequisites
+
+- Node.js
+- Yarn
+
+### Steps
+
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/yourusername/nahla-naturals.git
+    cd nahla-naturals
+    ```
+
+2. **Install Dependencies**:
+    ```bash
+    yarn install
+    ```
+
+## Usage
+
+### Running the Development Server
+
+To start the development server, run:
 ```bash
-npm run dev
-# or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+This will start the Next.js development server at `http://localhost:3000`.
+
+### Building for Production
+
+To build the project for production, run:
+```bash
+yarn build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Starting the Production Server
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+After building the project, you can start the production server with:
+```bash
+yarn start
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Deployment
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The project is deployed on Vercel. To deploy the project, follow these steps:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Install Vercel CLI**:
+    ```bash
+    npm install -g vercel
+    ```
 
-## Learn More
+2. **Login to Vercel**:
+    ```bash
+    vercel login
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Deploy the Project**:
+    ```bash
+    vercel
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure your code adheres to the existing style and add tests for any new features or bug fixes.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# nahla-naturals
+
+---
+
+By following this README file, you should be able to set up, run, and deploy the Nahla Naturals website with ease. If you encounter any issues, please refer to the documentation or raise an issue on the repository.
+
+## Deployed Website
+
+Visit the live website: [Nahla Naturals](https://nahla-naturals.vercel.app/)
