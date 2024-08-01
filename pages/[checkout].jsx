@@ -110,7 +110,7 @@ const Checkout = () => {
         await pollPaymentStatus(checkoutRequestID);
         toast.success("Payment verified successfully!");
       } catch (error) {
-        toast.error("Error during payment verification. Please try again.");
+        toast.error(`Error during payment verification: ${error.message}`);
       }
     } else {
       toast.error("No payment in process to check.");
